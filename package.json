@@ -23,6 +23,7 @@
     "mongoose": "^8.10.2",
     "path": "^0.12.7",
     "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-dist": "^5.20.0",
     "swagger-ui-express": "^5.0.1"
   }
 }
