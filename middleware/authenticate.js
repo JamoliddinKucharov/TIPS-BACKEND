@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/Admin");
 
 // Tokenni tasdiqlash
 const authMiddleware = (req, res, next) => {

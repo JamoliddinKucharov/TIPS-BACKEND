@@ -4,8 +4,7 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
-const profileRoutes = require("./routes/profile");
-const setupSwagger = require('./swagger');
+const profileRoutes = require("./routes/profile"); 
 
 var cors = require("cors");
 
@@ -29,8 +28,7 @@ app.use(cors());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/profile", profileRoutes);
-setupSwagger(app);
+app.use("/api/profile", profileRoutes); 
 
 // Start server
 app.listen(PORT, () => {

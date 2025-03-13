@@ -3,24 +3,10 @@ const {
   authMiddleware,
   roleMiddleware,
 } = require("../middleware/authenticate");
-const User = require("../models/User");
+const User = require("../models/Admin");
 
 const router = express.Router();
 
-/**
- * @swagger
- * /superadmin:
- *   get:
- *     summary: Access Superadmin panel
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Welcome message for Superadmin
- *       403:
- *         description: Forbidden
- */
 router.get(
   "/superadmin",
   authMiddleware,
@@ -29,21 +15,6 @@ router.get(
     res.json({ message: "Welcome, Superadmin!" });
   }
 );
-
-/**
- * @swagger
- * /infoadmin:
- *   get:
- *     summary: Access Infoadmin panel
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Welcome message for Infoadmin
- *       403:
- *         description: Forbidden
- */
 router.get(
   "/infoadmin",
   authMiddleware,
@@ -53,32 +24,6 @@ router.get(
   }
 );
 
-/**
- * @swagger
- * /assign-infoadmin:
- *   post:
- *     summary: Assign a user as Infoadmin
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 description: ID of the user to assign as Infoadmin
- *     responses:
- *       200:
- *         description: User assigned as Infoadmin
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
- */
 router.post(
   "/assign-infoadmin",
   authMiddleware,

@@ -1,45 +1,9 @@
 const express = require("express");
 const { authMiddleware } = require("../middleware/authenticate");
-const User = require("../models/User");
+const User = require("../models/Admin");
 
 const router = express.Router();
 
-/**
- * @swagger
- * /profile:
- *   get:
- *     summary: Get user profile
- *     tags: [Profile]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Successfully fetched user profile
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: User ID
- *                       example: 64b63d37f56d4e001a2d5e3a
- *                     username:
- *                       type: string
- *                       description: Username of the user
- *                       example: johndoe
- *                     role:
- *                       type: string
- *                       description: User role
- *                       example: infoadmin
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
- */
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select("-password");
