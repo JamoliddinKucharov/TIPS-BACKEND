@@ -31,6 +31,7 @@ router.post(
   "/user/register",
   [
     check("username", "Username is required").notEmpty(),
+    check("email", "Email is required").notEmpty(),
     check("password", "Password must be at least 6 characters").isLength({
       min: 6,
     }),
