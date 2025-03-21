@@ -52,7 +52,7 @@ const updateUser = async (req, res) => {
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Token is invalid" });
+    res.status(401).json({ message: "Token is invalid", error:error });
   }
 };
 
