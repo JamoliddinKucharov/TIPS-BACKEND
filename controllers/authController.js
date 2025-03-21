@@ -112,7 +112,11 @@ const registerUser = async (req, res) => {
     });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
     console.error(error);
     res.status(401).json({ message: "Server error" });
@@ -186,14 +190,18 @@ const registerCompany = async (req, res) => {
     });
     await newCompany.save();
 
-    res.status(201).json({ message: "Company registered successfully" });
+    const token = jwt.sign({ userId: newCompany._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({ message: "Company registered successfully", token });
   } catch (error) {
     console.error(error);
     res.status(401).json({ message: "Error" });
   }
 };
 
-// User Login
+// Company Login
 const loginCompany = async (req, res) => {
   try {
     const { companyName, companyPassword } = req.body;

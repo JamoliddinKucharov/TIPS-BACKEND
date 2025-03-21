@@ -1,8 +1,11 @@
 const express = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const { updateUser, getAccount } = require("../controllers/userController");
-const {  check } = require("express-validator");
+const {
+  updateUser,
+  getAccount,  
+} = require("../controllers/getUpdateController");
+const { check } = require("express-validator");
 
 const router = express.Router();
 
