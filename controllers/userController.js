@@ -10,13 +10,25 @@ const updateUser = async (req, res) => {
   }
 
   const { userId } = req.params;
-  const { firstName, lastName, email, phone, address, brand, inn } = req.body;
+  const {
+    username,
+    password,
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    brand,
+    inn,
+  } = req.body;
 
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     if (email && email !== user.email) {
       const existingEmail = await User.findOne({ email });
@@ -32,6 +44,8 @@ const updateUser = async (req, res) => {
     user.address = address || user.address;
     user.brand = brand || user.brand;
     user.inn = inn || user.inn;
+    user.username = username || user.username;
+    user.password = hashedPassword || user.password;
 
     await user.save();
 
