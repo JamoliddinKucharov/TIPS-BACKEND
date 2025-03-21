@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { updateUser, getAccount } = require("../controllers/userController");
-const { body } = require("express-validator");
+const {  check } = require("express-validator");
 
 const router = express.Router();
 
@@ -12,11 +12,11 @@ router.get("/account", getAccount);
 router.put(
   "/account/:userId",
   [
-    body("email").isEmail().withMessage("Invalid email address"),
-    body("phone")
-      .optional()
-      .isMobilePhone()
-      .withMessage("Invalid phone number"),
+    check("username", "Username is required").notEmpty(),
+    check("email", "Email is required").notEmpty(),
+    check("password", "Password must be at least 6 characters").isLength({
+      min: 6,
+    }),
   ],
   updateUser
 );

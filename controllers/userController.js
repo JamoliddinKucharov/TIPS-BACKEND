@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // User ma'lumotlarini yangilash
 const updateUser = async (req, res) => {
@@ -52,7 +53,7 @@ const updateUser = async (req, res) => {
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Token is invalid", error:error });
+    res.status(401).json({ message: "Server error"  });
   }
 };
 
@@ -81,7 +82,7 @@ const getAccount = async (req, res) => {
       return res.status(401).json({ message: "Token expired" });
     }
 
-    res.status(401).json({ message: "Token is invalid" });
+    res.status(401).json({ message: "Server error" });
   }
 };
 
