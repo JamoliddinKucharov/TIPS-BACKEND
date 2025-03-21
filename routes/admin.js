@@ -44,7 +44,7 @@ router.post(
       res.json({ message: "User assigned as Infoadmin" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Server error" });
+      res.status(401).json({ message: "Server error" });
     }
   }
 );

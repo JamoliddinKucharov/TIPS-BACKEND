@@ -33,7 +33,7 @@ const registerAdmin = async (req, res) => {
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: "Server error" });
   }
 };
 
@@ -62,7 +62,7 @@ const loginAdmin = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(401).send("Internal Server Error");
   }
 };
 
@@ -115,7 +115,7 @@ const registerUser = async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: "Server error" });
   }
 };
 
@@ -144,7 +144,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(401).send("Error");
   }
 };
 
@@ -189,7 +189,7 @@ const registerCompany = async (req, res) => {
     res.status(201).json({ message: "Company registered successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: "Error" });
   }
 };
 
@@ -221,7 +221,7 @@ const loginCompany = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(401).send("Internal Server Error");
   }
 };
 

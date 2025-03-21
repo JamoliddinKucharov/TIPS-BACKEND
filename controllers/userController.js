@@ -52,7 +52,7 @@ const updateUser = async (req, res) => {
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: "Token is invalid" });
   }
 };
 
@@ -81,7 +81,7 @@ const getAccount = async (req, res) => {
       return res.status(401).json({ message: "Token expired" });
     }
 
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(401).json({ message: "Token is invalid" });
   }
 };
 
