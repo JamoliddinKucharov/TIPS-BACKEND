@@ -4,6 +4,7 @@ const {
   roleMiddleware,
 } = require("../middleware/authenticate");
 const User = require("../models/Admin");
+const { getUsers } = require("../controllers/findUsers");
 
 const router = express.Router();
 
@@ -48,5 +49,9 @@ router.post(
     }
   }
 );
+  
+
+
+router.get("/users", authMiddleware, getUsers);
 
 module.exports = router;

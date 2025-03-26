@@ -3,7 +3,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const {
   updateUser,
-  getAccount,  
+  getAccount,
 } = require("../controllers/getUpdateController");
 const { check } = require("express-validator");
 

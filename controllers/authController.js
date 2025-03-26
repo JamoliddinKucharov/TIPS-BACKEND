@@ -5,7 +5,7 @@ const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Company = require("../models/Company");
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 // Admin Register
 const registerAdmin = async (req, res) => {
@@ -45,7 +45,7 @@ const loginAdmin = async (req, res) => {
       return res.status(400).send("Username and password are required");
     }
 
-    const user = await User.findOne({ username });
+    const user = await Admin.findOne({ username });
     if (!user) {
       return res.status(404).send("Admin not found");
     }
@@ -233,6 +233,25 @@ const loginCompany = async (req, res) => {
   }
 };
 
+
+
+const getDashboard = (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ message: 'Welcome to your dashboard!', user: req.user });
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+};
+
+const logout = (req, res) => {
+  req.logout((err) => {
+    if (err) return res.status(500).json({ message: 'Logout error' });
+    res.json({ message: 'Successfully logged out' });
+  });
+};
+
+
+
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -240,4 +259,7 @@ module.exports = {
   loginUser,
   registerCompany,
   loginCompany,
+  getDashboard,
+  logout
 };
+

@@ -7,17 +7,19 @@ const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const companyRoutes = require("./routes/company");
 const profileRoutes = require("./routes/profile");
-
-var cors = require("cors");
-
-connectDB();
+const passport = require('./config/passport');
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Database connection
+connectDB();
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "supersecret",
@@ -25,7 +27,8 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(cors());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -33,6 +36,12 @@ app.use("/api/user", userRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/profile", profileRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!" });
+});
 
 // Start server
 app.listen(PORT, () => {
