@@ -11,10 +11,8 @@ const userSchema = new mongoose.Schema({
   address: { type: String },
   lastName: { type: String },
   balance: { type: String },
-  history: { type: String }, 
+  history: { type: String },
   googleId: { type: String, unique: true, sparse: true },
-  facebookId: { type: String, unique: true, sparse: true }, 
-
-
+  facebookId: { type: String, unique: true, sparse: true },
 });
 module.exports = mongoose.model("User", userSchema);
