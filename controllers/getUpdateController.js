@@ -87,6 +87,26 @@ const getAccount = async (req, res) => {
   }
 };
 
+// User ma'lumotlarini ko'rish
+const getUser = async (req, res) => {
+  const { userId } = req.params
+
+
+  try {
+    const user = await User.findById(userId);
+
+    if (user) {
+      res.status(200).json({ message: "User found", user });
+    } else {
+      res.status(401).json({ message: "User not found" });
+
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "Server error" })
+  }
+}
+
 // Companiya ma'lumotlarini olish
 const getCompany = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -168,5 +188,5 @@ module.exports = {
   updateUser,
   getAccount,
   getCompany,
-  updateCompany,
+  updateCompany, getUser
 };

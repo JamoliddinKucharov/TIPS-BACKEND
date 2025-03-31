@@ -236,54 +236,7 @@ const loginCompany = async (req, res) => {
 
 
 
-// Sender Register
-const senderRegister = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
 
-  const {
-    username,
-    password,
-    email,
-    phone,
-    profilePicture,
-  } = req.body;
-
-  try {
-    const exitingSender = await Sender.findOne({
-      $or: [{ username }, { email }],
-    });
-
-    if (exitingSender) {
-      const message =
-        exitingSender.username === username
-          ? "username already exists!"
-          : "email already exists!";
-      return res.status(400).json({ message });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newSender = new Company({
-      username,
-      password: hashedPassword,
-      email,
-      phone,
-      profilePicture,
-    });
-    await newSender.save();
-
-    const token = jwt.sign({ userId: newSender._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    res.status(201).json({ message: "Sender registered successfully", token });
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: "Error" });
-  }
-};
 
 
 
@@ -312,7 +265,6 @@ module.exports = {
   registerCompany,
   loginCompany,
   getDashboard,
-  logout,
-  senderRegister
+  logout, 
 };
 

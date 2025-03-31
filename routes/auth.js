@@ -7,7 +7,6 @@ const {
   loginUser,
   registerCompany,
   loginCompany,
-  senderRegister,
 } = require("../controllers/authController");
 const passport = require('passport');
 const { getDashboard, logout } = require('../controllers/authController');
@@ -62,23 +61,6 @@ router.post(
 
 // Company Login
 router.post("/company/login", loginCompany);
-
-
-
-
-// Sender Register  
-router.post(
-  "/sender/register",
-  [
-    check("username", "username is required").notEmpty(),
-    check("password", "Password must be at least 6 characters").isLength(
-      {
-        min: 6,
-      }
-    ),
-  ],
-  senderRegister
-);
 
 
 

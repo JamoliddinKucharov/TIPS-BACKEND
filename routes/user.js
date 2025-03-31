@@ -4,12 +4,15 @@ const jwt = require("jsonwebtoken");
 const {
   updateUser,
   getAccount,
+  getUser
 } = require("../controllers/getUpdateController");
 const { check } = require("express-validator");
 
 const router = express.Router();
 
 router.get("/account", getAccount);
+
+router.get("/:userId", getUser)
 
 // User Update
 router.put(

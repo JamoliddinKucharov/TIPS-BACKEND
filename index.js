@@ -3,6 +3,7 @@ const session = require("express-session");
 require("dotenv").config();
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
+const senderRoutes = require("./routes/sender");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const companyRoutes = require("./routes/company");
@@ -33,6 +34,7 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/auth/sender", senderRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
