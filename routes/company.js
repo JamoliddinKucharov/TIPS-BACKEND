@@ -6,6 +6,7 @@ const {
   getCompany,
 } = require("../controllers/getUpdateController");
 const { check } = require("express-validator");
+const upload = require("../middleware/upload");
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.put(
       }
     ),
   ],
+  upload.single("image"),
   updateCompany
 );
 

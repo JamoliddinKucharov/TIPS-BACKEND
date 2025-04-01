@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["superadmin", "infoadmin"],
   },
-  profilePicture: { type: String },
+  image: { type: String },
   firstName: { type: String },
   lastName: { type: String },
 });

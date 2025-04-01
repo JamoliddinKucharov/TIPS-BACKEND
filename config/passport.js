@@ -22,7 +22,7 @@ passport.use(
             googleId: profile.id,
             username: profile.displayName,
             email: profile.emails[0].value,
-            profilePicture: profile.photos[0].value,
+            image: profile.photos[0].value,
             password: "isGoogle"
           });
           console.log('Yangi foydalanuvchi yaratildi:', user);

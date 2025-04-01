@@ -49,7 +49,7 @@ router.post(
     }
   }
 );
-  
+
 
 
 router.get("/users", authMiddleware, getUsers);

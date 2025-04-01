@@ -4,7 +4,7 @@ const AddRating = async (req, res) => {
     const { user_id, rater_id, rating } = req.body;
 
     if (rating < 1 || rating > 5) {
-        return res.status(400).json({ message: "Reyting 1 dan 5 gacha bo‘lishi kerak" });
+        return res.status(400).json({ message: "The rating must be between 1 and 5" });
     }
 
     try {
@@ -18,9 +18,9 @@ const AddRating = async (req, res) => {
             await newRating.save();
         }
 
-        return res.json({ message: "Reyting saqlandi" });
+        return res.json({ message: "Rating saved!" });
     } catch (error) {
-        return res.status(500).json({ message: "Server xatosi", error });
+        return res.status(500).json({ message: "Server error", error });
     }
 };
 
@@ -41,7 +41,7 @@ const getRating = async (req, res) => {
 
         return res.json({ averageRating, totalRatings });
     } catch (error) {
-        return res.status(500).json({ message: "Server xatosi", error });
+        return res.status(500).json({ message: "Server error", error });
     }
 }
 

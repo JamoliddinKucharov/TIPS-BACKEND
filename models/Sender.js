@@ -5,6 +5,6 @@ const senderSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, unique: true },
   phone: { type: String, unique: true },
-  profilePicture: { type: String },
+  image: { type: String },
 });
 module.exports = mongoose.model("Sender", senderSchema);

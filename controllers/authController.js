@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Company = require("../models/Company");
-const Sender = require("../models/Sender");
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
@@ -236,10 +235,6 @@ const loginCompany = async (req, res) => {
 
 
 
-
-
-
-
 const getDashboard = (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ message: 'Welcome to your dashboard!', user: req.user });
@@ -265,6 +260,6 @@ module.exports = {
   registerCompany,
   loginCompany,
   getDashboard,
-  logout, 
+  logout,
 };
 

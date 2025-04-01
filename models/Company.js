@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   companyEmail: { type: String, unique: true },
   companyImage: { type: String },
   companyPhone: { type: String },
+  photo: { type: String },
 });
 
 module.exports = mongoose.model("Company", userSchema);

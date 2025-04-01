@@ -10,6 +10,8 @@ const companyRoutes = require("./routes/company");
 const profileRoutes = require("./routes/profile");
 const ratingRoutes = require("./routes/rating");
 const passport = require('./config/passport');
+const upload = require("./middleware/upload");
+
 const cors = require("cors");
 
 const app = express();
@@ -21,6 +23,10 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/uploads", express.static("uploads"));
+
+
 app.use(cors());
 app.use(
   session({

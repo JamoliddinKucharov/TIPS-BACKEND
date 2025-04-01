@@ -7,6 +7,7 @@ const {
   getUser
 } = require("../controllers/getUpdateController");
 const { check } = require("express-validator");
+const upload = require("../middleware/upload");
 
 const router = express.Router();
 
@@ -24,6 +25,8 @@ router.put(
       min: 6,
     }),
   ],
+
+  upload.single("image"),
   updateUser
 );
 

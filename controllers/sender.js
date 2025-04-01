@@ -18,7 +18,7 @@ const senderRegister = async (req, res) => {
         password,
         email,
         phone,
-        profilePicture,
+        image,
     } = req.body;
 
     try {
@@ -40,7 +40,7 @@ const senderRegister = async (req, res) => {
             password: hashedPassword,
             email,
             phone,
-            profilePicture,
+            image,
         });
         await newSender.save();
 
@@ -127,7 +127,7 @@ const senderUpdate = async (req, res) => {
         password,
         email,
         phone,
-        profilePicture,
+        image,
     } = req.body;
 
     try {
@@ -151,7 +151,7 @@ const senderUpdate = async (req, res) => {
         sender.password = hashedPassword || sender.password;
         sender.email = email || sender.email;
         sender.phone = phone || sender.phone;
-        sender.profilePicture = profilePicture || sender.profilePicture;
+        sender.image = image || sender.image;
 
         await sender.save();
 
