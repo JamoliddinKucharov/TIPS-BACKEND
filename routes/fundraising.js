@@ -1,10 +1,11 @@
 const express = require("express");
 const { check } = require("express-validator");
-const { senderRegister, senderLogin, senderGet, senderUpdate } = require("../controllers/sender");
+const { fundraisingRegister, fundraisingLogin, fundraisingGet, fundraisingUpdate } = require("../controllers/fundraising");
+const upload = require("../middleware/upload");
 const router = express.Router();
 
 
-// Sender Register  
+// Fundraising Register  
 router.post(
     "/register",
     [
@@ -15,13 +16,13 @@ router.post(
             }
         ),
     ],
-    senderRegister
+    fundraisingRegister
 );
 
 
-router.post("/login", senderLogin);
+router.post("/login", fundraisingLogin);
 
-router.get("/account", senderGet);
-router.put("/:senderId", senderUpdate);
+router.get("/account", fundraisingGet);
+router.put("/:fundraisingId", upload.single("image"), fundraisingUpdate);
 
 module.exports = router;

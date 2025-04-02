@@ -1,20 +1,20 @@
 const Rating = require("../models/Rating");
 
 const AddRating = async (req, res) => {
-    const { user_id, rater_id, rating } = req.body;
+    const { user_id, rating } = req.body;
 
     if (rating < 1 || rating > 5) {
         return res.status(400).json({ message: "The rating must be between 1 and 5" });
     }
 
     try {
-        const existingRating = await Rating.findOne({ user_id, rater_id });
+        const existingRating = await Rating.findOne({ user_id });
 
         if (existingRating) {
             existingRating.rating = rating;
             await existingRating.save();
         } else {
-            const newRating = new Rating({ user_id, rater_id, rating });
+            const newRating = new Rating({ user_id, rating });
             await newRating.save();
         }
 

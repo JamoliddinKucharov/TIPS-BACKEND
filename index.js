@@ -3,14 +3,13 @@ const session = require("express-session");
 require("dotenv").config();
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
-const senderRoutes = require("./routes/sender");
+const fundraisingRoutes = require("./routes/fundraising");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const companyRoutes = require("./routes/company");
 const profileRoutes = require("./routes/profile");
 const ratingRoutes = require("./routes/rating");
 const passport = require('./config/passport');
-const upload = require("./middleware/upload");
 
 const cors = require("cors");
 
@@ -40,7 +39,7 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/auth/sender", senderRoutes);
+app.use("/api/auth/fundraising", fundraisingRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
