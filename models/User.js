@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, unique: true },
   photo: { type: String },
   firstName: { type: String },
+  work: { type: String },
   inn: { type: String },
   brand: { type: String },
   address: { type: String },
