@@ -83,6 +83,7 @@ const registerUser = async (req, res) => {
     address,
     brand,
     inn,
+    work
   } = req.body;
 
   try {
@@ -106,6 +107,7 @@ const registerUser = async (req, res) => {
       lastName,
       email,
       phone,
+      work,
       address,
       brand,
       inn,
