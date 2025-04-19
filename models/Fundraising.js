@@ -6,7 +6,6 @@ const fundraisingSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   phone: { type: String },
   image: { type: String },
-
   collection: { type: String },
   name: { type: String },
   type: { type: String },

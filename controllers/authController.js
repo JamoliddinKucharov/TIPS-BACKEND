@@ -128,12 +128,12 @@ const registerUser = async (req, res) => {
 // User Login
 const loginUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).send("Username and password are required!");
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).send("Email Number and password are required!");
     }
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).send("User not found");
     }
@@ -167,6 +167,8 @@ const registerCompany = async (req, res) => {
     companyEmail,
     companyImage,
     companyPhone,
+    companyInn,
+    legalAddress,
   } = req.body;
 
   try {
@@ -189,6 +191,8 @@ const registerCompany = async (req, res) => {
       companyEmail,
       companyImage,
       companyPhone,
+      companyInn,
+      legalAddress,
     });
     await newCompany.save();
 
@@ -206,12 +210,12 @@ const registerCompany = async (req, res) => {
 // Company Login
 const loginCompany = async (req, res) => {
   try {
-    const { companyName, companyPassword } = req.body;
-    if (!companyName || !companyPassword) {
-      return res.status(400).send("companyName and password are required!");
+    const { companyEmail, companyPassword } = req.body;
+    if (!companyEmail || !companyPassword) {
+      return res.status(400).send("companyEmail and password are required!");
     }
 
-    const company = await Company.findOne({ companyName });
+    const company = await Company.findOne({ companyEmail });
     if (!company) {
       return res.status(404).send("Company not found");
     }
@@ -234,8 +238,6 @@ const loginCompany = async (req, res) => {
     res.status(401).send("Internal Server Error");
   }
 };
-
-
 
 const getDashboard = (req, res) => {
   if (req.isAuthenticated()) {

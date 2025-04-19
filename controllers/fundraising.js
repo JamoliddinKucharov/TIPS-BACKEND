@@ -63,12 +63,12 @@ const fundraisingRegister = async (req, res) => {
 
 const fundraisingLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).send("Username and password are required");
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send("email and password are required");
         }
 
-        const fundraising = await Fundraising.findOne({ username });
+        const fundraising = await Fundraising.findOne({ email });
         if (!fundraising) {
             return res.status(404).send("Fundraising not found");
         }
@@ -119,7 +119,6 @@ const fundraisingGet = async (req, res) => {
 };
 
 
-
 const fundraisingUpdate = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -132,12 +131,11 @@ const fundraisingUpdate = async (req, res) => {
         password,
         email,
         phone,
-
         collection,
         name,
         type,
         price,
-        comment, 
+        comment,
     } = req.body;
 
 
