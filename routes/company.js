@@ -18,11 +18,7 @@ router.put(
   [
     check("companyName", "Username is required").notEmpty(),
     check("companyEmail", "Email is required").notEmpty(),
-    check("companyPassword", "Password must be at least 6 characters").isLength(
-      {
-        min: 6,
-      }
-    ),
+
   ],
   upload.single("image"),
   updateCompany

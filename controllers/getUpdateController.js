@@ -13,7 +13,7 @@ const updateUser = async (req, res) => {
   const { userId } = req.params;
   const { username, password, firstName, lastName, email, phone, address, brand, inn } = req.body;
 
-  const image = req.file ? req.file.filename : null; 
+  const image = req.file ? req.file.filename : null;
 
   try {
     const user = await User.findById(userId);
@@ -158,7 +158,6 @@ const updateCompany = async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
 
-    const hashedPassword = await bcrypt.hash(companyPassword, 10);
 
     if (companyEmail && companyEmail !== company.companyEmail) {
       const existingEmail = await Company.findOne({ companyEmail });
@@ -173,7 +172,11 @@ const updateCompany = async (req, res) => {
     company.companyEmail = companyEmail || company.companyEmail;
     company.companyImage = companyImage || company.companyImage;
     company.companyPhone = companyPhone || company.companyPhone;
-    company.companyPassword = hashedPassword || company.companyPassword;
+
+    if (companyPassword) {
+      const hashedPassword = await bcrypt.hash(companyPassword, 10);
+      company.companyPassword = hashedPassword || company.companyPassword;
+    }
 
     if (image) {
       if (company.photo) {
