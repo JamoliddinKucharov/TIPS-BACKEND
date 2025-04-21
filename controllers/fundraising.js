@@ -147,7 +147,6 @@ const fundraisingUpdate = async (req, res) => {
             return res.status(404).json({ message: "Fundraising not found" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
 
         if (email && email !== fundraising.email) {
             const existingEmail = await Fundraising.findOne({ email });
@@ -168,7 +167,6 @@ const fundraisingUpdate = async (req, res) => {
             fundraising.photo = image;
         }
         fundraising.username = username || fundraising.username;
-        fundraising.password = hashedPassword || fundraising.password;
         fundraising.email = email || fundraising.email;
         fundraising.phone = phone || fundraising.phone;
         fundraising.collection = collection || fundraising.collection;
@@ -176,6 +174,11 @@ const fundraisingUpdate = async (req, res) => {
         fundraising.type = type || fundraising.type;
         fundraising.price = price || fundraising.price;
         fundraising.comment = comment || fundraising.comment;
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10); 
+            fundraising.password = hashedPassword || fundraising.password;
+        }
 
         await fundraising.save();
 
