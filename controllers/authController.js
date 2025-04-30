@@ -55,9 +55,8 @@ const loginAdmin = async (req, res) => {
       return res.status(401).send("Invalid password");
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
+
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
@@ -114,9 +113,7 @@ const registerUser = async (req, res) => {
     });
     await newUser.save();
 
-    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET);
 
     res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
@@ -143,9 +140,7 @@ const loginUser = async (req, res) => {
       return res.status(401).send("Invalid password");
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
@@ -196,9 +191,7 @@ const registerCompany = async (req, res) => {
     });
     await newCompany.save();
 
-    const token = jwt.sign({ userId: newCompany._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: newCompany._id }, JWT_SECRET);
 
     res.status(201).json({ message: "Company registered successfully", token });
   } catch (error) {
@@ -228,9 +221,7 @@ const loginCompany = async (req, res) => {
       return res.status(401).send("Invalid password");
     }
 
-    const token = jwt.sign({ userId: company._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ userId: company._id }, JWT_SECRET);
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {

@@ -49,9 +49,7 @@ const fundraisingRegister = async (req, res) => {
         });
         await newFundraising.save();
 
-        const token = jwt.sign({ userId: newFundraising._id }, JWT_SECRET, {
-            expiresIn: "1h",
-        });
+        const token = jwt.sign({ userId: newFundraising._id }, JWT_SECRET);
 
         res.status(201).json({ message: "Fundraising registered successfully", token });
     } catch (error) {
@@ -78,9 +76,7 @@ const fundraisingLogin = async (req, res) => {
             return res.status(401).send("Invalid password");
         }
 
-        const token = jwt.sign({ userId: fundraising._id }, JWT_SECRET, {
-            expiresIn: "1h",
-        });
+        const token = jwt.sign({ userId: fundraising._id }, JWT_SECRET);
 
         res.status(200).json({ message: "Login successful", token });
     } catch (error) {
@@ -176,7 +172,7 @@ const fundraisingUpdate = async (req, res) => {
         fundraising.comment = comment || fundraising.comment;
 
         if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10); 
+            const hashedPassword = await bcrypt.hash(password, 10);
             fundraising.password = hashedPassword || fundraising.password;
         }
 
