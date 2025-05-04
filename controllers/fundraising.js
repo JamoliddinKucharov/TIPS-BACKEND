@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const path = require("path");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const Fundraising = require("../models/Fundraising");
