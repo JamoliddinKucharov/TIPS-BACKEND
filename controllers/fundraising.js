@@ -7,10 +7,16 @@ const Fundraising = require("../models/Fundraising");
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-if (!JWT_SECRET) {
-    console.error("JWT_SECRET_KEY is not defined!");
-    return res.status(500).json({ message: "Internal server error" });
-}
+const fundraisingHandler = async (req, res) => {
+    if (!JWT_SECRET) {
+        console.error("JWT_SECRET_KEY is not defined!");
+        return res.status(500).json({ message: "Internal server error" });
+    }
+
+    // ... qolgan kod
+};
+
+
 
 // Fundraising Register
 const fundraisingRegister = async (req, res) => {
@@ -191,5 +197,6 @@ const fundraisingUpdate = async (req, res) => {
 
 module.exports = {
     fundraisingRegister, fundraisingLogin, fundraisingGet,
-    fundraisingUpdate
+    fundraisingUpdate,
+    fundraisingHandler
 };

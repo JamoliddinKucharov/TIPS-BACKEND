@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const {
   updateUser,
   getAccount,
+  getAllUsers,
   getUser
 } = require("../controllers/getUpdateController");
 const { check } = require("express-validator");
@@ -12,6 +13,8 @@ const upload = require("../middleware/upload");
 const router = express.Router();
 
 router.get("/account", getAccount);
+
+router.get("/accounts", getAllUsers);
 
 router.get("/:userId", getUser)
 
