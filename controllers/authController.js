@@ -14,10 +14,15 @@ const registerAdmin = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { username, password } = req.body;
 
+  const { username, password, role } = req.body;
   try {
-    const existingUser = await Admin.findOne();
+
+    if (!["superadmin", "infoadmin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    const existingUser = await Admin.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "Admin already exists!" });
     }
@@ -26,9 +31,10 @@ const registerAdmin = async (req, res) => {
     const newAdmin = new Admin({
       username,
       password: hashedPassword,
-      role: "superadmin",
+      role,
     });
     await newAdmin.save();
+
 
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
@@ -55,10 +61,10 @@ const loginAdmin = async (req, res) => {
       return res.status(401).send("Invalid password");
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
+    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET);
 
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ message: "Login successful", token, role: user.role, });
   } catch (error) {
     console.error("Server Error:", error);
     res.status(401).send("Internal Server Error");
