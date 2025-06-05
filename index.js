@@ -10,6 +10,7 @@ const companyRoutes = require("./routes/company");
 const profileRoutes = require("./routes/profile");
 const ratingRoutes = require("./routes/rating");
 const passport = require('./config/passport');
+const stripeRoutes = require("./routes/stripe")
 
 const cors = require("cors");
 
@@ -45,6 +46,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/rating", ratingRoutes);
+app.use('/api/stripe', stripeRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
