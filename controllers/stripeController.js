@@ -1,17 +1,20 @@
-import Stripe from 'stripe';
-import Transaction from '../models/Transaction.js';
+const Stripe = require('stripe');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2022-11-15', // versiyani aniqlab qo‘yish yaxshiroq
+});
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const Transaction = require('../models/Transaction');
 
-export const createPaymentIntent = async (req, res) => {
+const createPaymentIntent = async (req, res) => {
   try {
     const { amount, userId } = req.body;
-    console.log("Stripe secret:", process.env.STRIPE_SECRET_KEY);
-    
+
+    console.log("Stripe secret key (for debug):", process.env.STRIPE_SECRET_KEY);
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // USD → cents
+      amount: Math.round(amount * 100), // Stripe ishlatadigan birlik — cents
       currency: 'usd',
-      metadata: { userId }
+      metadata: { userId: String(userId) }
     });
 
     const transaction = new Transaction({
@@ -28,7 +31,11 @@ export const createPaymentIntent = async (req, res) => {
       clientSecret: paymentIntent.client_secret
     });
   } catch (err) {
-    console.error('Stripe error', err);
+    console.error('Stripe error:', err);
     res.status(500).send({ error: err.message });
   }
+};
+
+module.exports = {
+  createPaymentIntent
 };
