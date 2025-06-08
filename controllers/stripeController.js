@@ -1,15 +1,22 @@
-import Stripe from 'stripe';
-import Transaction from '../models/Transaction.js';
+const Stripe = require('stripe');
+const Transaction = require('../models/Transaction');
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const createPaymentIntent = async (req, res) => {
+exports.createPaymentIntent = async (req, res) => {
   try {
     const { amount, userId } = req.body;
+
+    // Tekshiruv
+    if (!amount || isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Invalid amount value' });
+    }
+
     console.log("Stripe secret:", process.env.STRIPE_SECRET_KEY);
-    
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // USD → cents
+      amount: Math.round(amount * 100), // dollardan centga
       currency: 'usd',
       metadata: { userId }
     });
