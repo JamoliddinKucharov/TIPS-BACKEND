@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.post('/create-payment-intent', createPaymentIntent);
 
-module.exports = router; // ✅ CommonJS export
+module.exports = router; // ✅ CommonJS export 1
