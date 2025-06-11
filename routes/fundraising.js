@@ -13,8 +13,8 @@ const upload = require("../middleware/upload");
 const router = express.Router();
 
 /**
- * 📌 Fundraising ID orqali profil bilan birga ma'lumot olish
- * GET /api/fundraising/details/:id
+ * 📌 Fundraising ID orqali profil bilan birga ma'lumot olish (user bo'lmasa ham ishlaydi)
+ * GET /api/auth/fundraising/details/:id
  */
 router.get('/details/:id', async (req, res) => {
   try {
@@ -24,15 +24,9 @@ router.get('/details/:id', async (req, res) => {
       return res.status(404).json({ message: "Fundraising not found" });
     }
 
-    // ❗️Agar fundraising hujjatida `userId` yo‘q bo‘lsa, bu qism xatolik beradi.
-    if (!fundraising.userId) {
-      return res.status(400).json({ message: "No userId associated with this fundraising record" });
-    }
-
-    const user = await User.findById(fundraising.userId).lean();
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    let user = null;
+    if (fundraising.userId) {
+      user = await User.findById(fundraising.userId).lean();
     }
 
     res.json({ fundraising, user });
@@ -44,7 +38,7 @@ router.get('/details/:id', async (req, res) => {
 
 /**
  * 👤 Fundraising Ro‘yxatdan o‘tish
- * POST /api/fundraising/register
+ * POST /api/auth/fundraising/register
  */
 router.post(
   "/register",
@@ -57,19 +51,19 @@ router.post(
 
 /**
  * 🔐 Fundraising Login
- * POST /api/fundraising/login
+ * POST /api/auth/fundraising/login
  */
 router.post("/login", fundraisingLogin);
 
 /**
  * 🧾 Profilni olish
- * GET /api/fundraising/account
+ * GET /api/auth/fundraising/account
  */
 router.get("/account", fundraisingGet);
 
 /**
  * ✏️ Fundraising ma’lumot yangilash (rasm bilan)
- * PUT /api/fundraising/:fundraisingId
+ * PUT /api/auth/fundraising/:fundraisingId
  */
 router.put("/:fundraisingId", upload.single("image"), fundraisingUpdate);
 
