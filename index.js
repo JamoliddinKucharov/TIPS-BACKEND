@@ -47,7 +47,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/rating", ratingRoutes);   
-app.use('/api/reviews', reviewRoutes);
+app.use('/api/reviews', reviewRoutes);`  `
 
 
 // Error handling middleware

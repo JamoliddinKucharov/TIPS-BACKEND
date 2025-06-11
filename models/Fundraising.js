@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const fundraisingSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 👈 muhim!
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, unique: true },
