@@ -30,6 +30,7 @@ const fundraisingRegister = async (req, res) => {
         email,
         phone,
         image,
+        userId
     } = req.body;
 
 
@@ -53,6 +54,7 @@ const fundraisingRegister = async (req, res) => {
             email,
             phone,
             image,
+            userId
         });
         await newFundraising.save();
 
