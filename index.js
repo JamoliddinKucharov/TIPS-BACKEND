@@ -18,7 +18,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database connection 1
+// Database connection 2
 connectDB();
 
 // Middleware
