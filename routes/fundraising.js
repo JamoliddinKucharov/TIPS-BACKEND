@@ -8,6 +8,7 @@ const {
 } = require("../controllers/fundraising");
 const Fundraising = require("../models/Fundraising");
 const User = require("../models/User");
+const { withdrawToCard } = require("../controllers/stripeController");
 const upload = require("../middleware/upload");
 
 const router = express.Router();
@@ -66,5 +67,11 @@ router.get("/account", fundraisingGet);
  * PUT /api/auth/fundraising/:fundraisingId
  */
 router.put("/:fundraisingId", upload.single("image"), fundraisingUpdate);
+
+/**
+ * 🏦 Pulni kartaga yechish
+ * POST /api/auth/fundraising/withdraw
+ */
+router.post("/withdraw", withdrawToCard);
 
 module.exports = router;
