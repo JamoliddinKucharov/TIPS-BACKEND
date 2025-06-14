@@ -43,7 +43,7 @@ app.use(passport.session());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/auth/fundraising", fundraisingRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/user", userRoutes);     
 app.use("/api/company", companyRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/profile", profileRoutes);
