@@ -1,5 +1,7 @@
 const Stripe = require('stripe');
 const Transaction = require('../models/Transaction');
+const User = require('../models/User');
+const Fundraising = require('../models/Fundraising');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -13,9 +15,9 @@ exports.createPaymentIntent = async (req, res) => {
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
+      amount: Math.round(amount * 100), // Stripe uses cents
       currency: 'usd',
-      metadata: { userId }
+      metadata: { userId },
     });
 
     await Transaction.create({
@@ -23,16 +25,19 @@ exports.createPaymentIntent = async (req, res) => {
       amount,
       currency: 'usd',
       status: 'pending',
-      paymentIntentId: paymentIntent.id
+      paymentIntentId: paymentIntent.id,
+      type: 'payment',
     });
 
-    res.send({ clientSecret: paymentIntent.client_secret });
+    res.status(200).json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    console.error('Stripe PaymentIntent error:', err.message);
+    res.status(500).json({ error: 'Stripe error: ' + err.message });
   }
 };
 
-// 💳 Withdraw to card
+
+// 💳 Withdraw to Card
 exports.withdrawToCard = async (req, res) => {
   const { userId, amount, role } = req.body;
 
@@ -43,30 +48,46 @@ exports.withdrawToCard = async (req, res) => {
   try {
     let entity;
     if (role === 'user') {
-      const User = require('../models/User');
       entity = await User.findById(userId);
     } else if (role === 'fundraising') {
-      const Fundraising = require('../models/Fundraising');
       entity = await Fundraising.findById(userId);
+    } else {
+      return res.status(400).json({ message: 'Invalid role' });
     }
 
     if (!entity) {
       return res.status(404).json({ message: 'Entity not found' });
     }
 
-    const stripeResponse = { success: true, message: 'Withdrawal initiated' };
+    // ⚠️ Real Stripe payout only works with connected accounts
+    // This is a placeholder for real payout logic
+    // You can enable this when using Stripe Connect:
 
-    await Transaction.create({
+    /*
+    const payout = await stripe.payouts.create({
+      amount: Math.round(amount * 100),
+      currency: 'usd',
+      method: 'standard',
+    });
+    */
+
+    // For now, just simulate a withdrawal log:
+    const transaction = await Transaction.create({
       userId,
       amount,
-      status: 'pending',
       currency: 'usd',
-      note: `Withdraw initiated by ${role}`
+      status: 'success', // or 'pending'
+      type: 'withdrawal',
+      note: `Withdraw initiated by ${role}`,
     });
 
-    res.status(200).json(stripeResponse);
+    res.status(200).json({
+      success: true,
+      message: 'Withdrawal simulated successfully (not real)',
+      transactionId: transaction._id,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Withdraw error:', err.message);
+    res.status(500).json({ message: 'Server error: ' + err.message });
   }
 };
