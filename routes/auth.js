@@ -1,5 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
+const passport = require('passport');
 const {
   registerAdmin,
   loginAdmin,
@@ -7,10 +8,11 @@ const {
   loginUser,
   registerCompany,
   loginCompany,
+  getDashboard,
+  logout,
+  forgotPassword,
+  resetPassword
 } = require("../controllers/authController");
-const passport = require('passport');
-const { getDashboard, logout } = require('../controllers/authController');
-
 
 const router = express.Router();
 
@@ -19,9 +21,7 @@ router.post(
   "/register",
   [
     check("username", "Username is required").notEmpty(),
-    check("password", "Password must be at least 6 characters").isLength({
-      min: 6,
-    }),
+    check("password", "Password must be at least 6 characters").isLength({ min: 6 }),
   ],
   registerAdmin
 );
@@ -35,9 +35,7 @@ router.post(
   [
     check("username", "Username is required").notEmpty(),
     check("email", "Email is required").notEmpty(),
-    check("password", "Password must be at least 6 characters").isLength({
-      min: 6,
-    }),
+    check("password", "Password must be at least 6 characters").isLength({ min: 6 }),
   ],
   registerUser
 );
@@ -50,11 +48,7 @@ router.post(
   "/company/register",
   [
     check("companyName", "companyName is required").notEmpty(),
-    check("companyPassword", "Password must be at least 6 characters").isLength(
-      {
-        min: 6,
-      }
-    ),
+    check("companyPassword", "Password must be at least 6 characters").isLength({ min: 6 }),
   ],
   registerCompany
 );
@@ -62,11 +56,11 @@ router.post(
 // Company Login
 router.post("/company/login", loginCompany);
 
+// 👉 Forgot & Reset Password (YANGI)
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
-
-// Passport 
-// Google orqali kirish
-
+// 🔐 Google Login
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get(
@@ -77,7 +71,7 @@ router.get(
   }
 );
 
-// Facebook orqali kirish
+// 🔐 Facebook Login
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 
 router.get(
@@ -88,7 +82,7 @@ router.get(
   }
 );
 
-// Dashboard va chiqish
+// Dashboard & Logout
 router.get('/dashboard', getDashboard);
 router.get('/logout', logout);
 

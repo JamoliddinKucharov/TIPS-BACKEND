@@ -36,7 +36,6 @@ exports.createPaymentIntent = async (req, res) => {
   }
 };
 
-
 // 💳 Withdraw to Card
 exports.withdrawToCard = async (req, res) => {
   const { userId, amount, role } = req.body;
@@ -59,24 +58,13 @@ exports.withdrawToCard = async (req, res) => {
       return res.status(404).json({ message: 'Entity not found' });
     }
 
-    // ⚠️ Real Stripe payout only works with connected accounts
-    // This is a placeholder for real payout logic
-    // You can enable this when using Stripe Connect:
+    // ⚠️ Real Stripe payout requires connected accounts (not implemented here)
 
-    /*
-    const payout = await stripe.payouts.create({
-      amount: Math.round(amount * 100),
-      currency: 'usd',
-      method: 'standard',
-    });
-    */
-
-    // For now, just simulate a withdrawal log:
     const transaction = await Transaction.create({
       userId,
       amount,
       currency: 'usd',
-      status: 'success', // or 'pending'
+      status: 'succeeded', // ✅ Enumga mos yozildi
       type: 'withdrawal',
       note: `Withdraw initiated by ${role}`,
     });
