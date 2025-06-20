@@ -11,7 +11,7 @@ passport.use(
     {
       clientID: '1029729026392-e1410rnsgl6hllnaj4t2vd4k98jgrdqe.apps.googleusercontent.com',
       clientSecret: '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',
-      callbackURL: 'https://tips-backend-one.vercel.app/api/auth/google/callback',
+      callbackURL: 'https://tips.instalady.uz/api/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -41,9 +41,9 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: '1104007761531785',
-      clientSecret: '8d925ff626fb29ae502c4e6f0c9ab392',
-      callbackURL: 'https://tips-backend-one.vercel.app/api/auth/facebook/callback',
+      clientID: '577994318404635',
+      clientSecret: '1acf5cf0a3f0d7b4f51a34bca2cd0c87',
+      callbackURL: 'https://tips.instalady.uz/api/auth/facebook/callback',
       profileFields: ['id', 'emails', 'name'],
     },
     async (accessToken, refreshToken, profile, done) => {
