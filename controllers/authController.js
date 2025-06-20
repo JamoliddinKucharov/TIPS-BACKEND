@@ -30,7 +30,7 @@ const registerAdmin = async (req, res) => {
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -50,7 +50,7 @@ const loginAdmin = async (req, res) => {
     res.status(200).json({ message: "Login successful", token, role: user.role });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(401).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -78,7 +78,7 @@ const registerUser = async (req, res) => {
     res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -98,7 +98,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(401).send("Error");
+    res.status(500).send("Error");
   }
 };
 
@@ -126,7 +126,7 @@ const registerCompany = async (req, res) => {
     res.status(201).json({ message: "Company registered successfully", token });
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Error" });
+    res.status(500).json({ message: "Error" });
   }
 };
 
@@ -146,11 +146,11 @@ const loginCompany = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(401).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };
 
-// Forgot Password
+// ✅ FIXED: Forgot Password
 const forgotPassword = async (req, res) => {
   const { email, role } = req.body;
   let Model;
@@ -169,20 +169,29 @@ const forgotPassword = async (req, res) => {
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
-    await transporter.sendMail({
+    transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Reset Your Password',
-      html: `<p>Click this link to reset password: <a href="${resetLink}">${resetLink}</a></p>`,
+      html: `<p>Click this link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`,
+    }, (error, info) => {
+      if (error) {
+        console.error("Email sending failed:", error);
+        return res.status(500).json({ message: 'Email sending failed', error: error.message });
+      }
+      console.log("Email sent:", info.response);
+      res.status(200).json({ message: 'Password reset link sent to your email' });
     });
 
-    res.status(200).json({ message: 'Password reset link sent to your email' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
