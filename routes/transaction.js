@@ -1,16 +1,19 @@
-// routes/transaction.js
-
 const express = require('express');
 const router = express.Router();
+
 const {
   getAllTransactions,
-  getTransactionsByUserId
+  getTransactionsByUserId,
+  createTransaction
 } = require('../controllers/transactionController');
 
-// Hamma tranzaksiyalar
+// 🔐 GET all transactions — Admin or system use
 router.get('/', getAllTransactions);
 
-// Faqat bitta userga tegishlilari
+// 👤 GET user transactions by userId
 router.get('/user/:userId', getTransactionsByUserId);
+
+// ➕ POST: Create transaction (optional)
+router.post('/', createTransaction);
 
 module.exports = router;

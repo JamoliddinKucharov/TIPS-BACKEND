@@ -6,7 +6,7 @@ const transactionSchema = new mongoose.Schema({
   currency: { type: String, default: 'usd' },
   status: {
     type: String,
-    enum: ['pending', 'succeeded', 'failed'], // "success" emas, "succeeded"
+    enum: ['pending', 'succeeded', 'failed'],
     default: 'pending'
   },
   type: {
