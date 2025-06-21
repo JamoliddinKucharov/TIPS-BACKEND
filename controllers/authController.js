@@ -1,12 +1,13 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const { validationResult } = require("express-validator");
+const { Resend } = require("resend");
 const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Company = require("../models/Company");
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Admin Register
 const registerAdmin = async (req, res) => {
@@ -150,7 +151,7 @@ const loginCompany = async (req, res) => {
   }
 };
 
-// ✅ FIXED: Forgot Password
+// ✅ UPDATED: Forgot Password (Resend)
 const forgotPassword = async (req, res) => {
   const { email, role } = req.body;
   let Model;
@@ -167,27 +168,19 @@ const forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: user._id, role }, JWT_SECRET, { expiresIn: '15m' });
     const resetLink = `https://tips.instalady.uz/reset-password/${token}`;
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Reset Your Password',
-      html: `<p>Click this link to reset your password: <a href="${resetLink}">${resetLink}</a></p>`,
-    }, (error, info) => {
-      if (error) {
-        console.error("Email sending failed:", error);
-        return res.status(500).json({ message: 'Email sending failed', error: error.message });
-      }
-      console.log("Email sent:", info.response);
-      res.status(200).json({ message: 'Password reset link sent to your email' });
+      html: `<p>Click this link to reset your password:</p><p><a href="${resetLink}">${resetLink}</a></p>`,
     });
+
+    if (error) {
+      console.error("Email sending failed:", error);
+      return res.status(500).json({ message: 'Email sending failed', error: error.message });
+    }
+
+    res.status(200).json({ message: 'Password reset link sent to your email' });
 
   } catch (err) {
     console.error(err);
