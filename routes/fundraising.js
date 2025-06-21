@@ -66,7 +66,18 @@ router.get("/account", fundraisingGet);
  * ✏️ Fundraising ma’lumot yangilash (rasm bilan)
  * PUT /api/auth/fundraising/:fundraisingId
  */
-router.put("/:fundraisingId", upload.single("image"), fundraisingUpdate);
+router.put(
+  "/:fundraisingId",
+  (req, res, next) => {
+    upload.single("image")(req, res, function (err) {
+      if (err) {
+        return res.status(400).json({ message: "Fayl yuklashda xatolik", error: err.message });
+      }
+      next();
+    });
+  },
+  fundraisingUpdate
+);
 
 /**
  * 🏦 Pulni kartaga yechish
