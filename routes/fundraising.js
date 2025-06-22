@@ -43,6 +43,7 @@ router.get('/details/:id', async (req, res) => {
  */
 router.post(
   "/register",
+  upload.single("photo"), // ✅ rasm yuklash qo‘shildi
   [
     check("username", "Username is required").notEmpty(),
     check("password", "Password must be at least 6 characters").isLength({ min: 6 })
@@ -68,14 +69,7 @@ router.get("/account", fundraisingGet);
  */
 router.put(
   "/:fundraisingId",
-  (req, res, next) => {
-    upload.single("image")(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ message: "Fayl yuklashda xatolik", error: err.message });
-      }
-      next();
-    });
-  },
+  upload.single("photo"), // ✅ yangilash uchun ham rasm qabul qilinadi
   fundraisingUpdate
 );
 
