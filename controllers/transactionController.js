@@ -34,6 +34,10 @@ exports.getTransactionsByUserId = async (req, res) => {
 exports.createTransaction = async (req, res) => {
   const { userId, amount, type, status, currency, note, paymentIntentId } = req.body;
 
+  if (!userId) {
+    return res.status(400).json({ message: "userId is required" });
+  }
+
   try {
     const transaction = new Transaction({
       userId,
@@ -52,3 +56,4 @@ exports.createTransaction = async (req, res) => {
     res.status(500).json({ message: "Failed to create transaction", error });
   }
 };
+
