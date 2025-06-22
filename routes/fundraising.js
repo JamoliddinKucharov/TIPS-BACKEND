@@ -28,7 +28,7 @@ router.get('/details/:id', async (req, res) => {
     let user = null;
     if (fundraising.userId) {
       user = await User.findById(fundraising.userId).lean();
-    }
+    } 
 
     res.json({ fundraising, user });
   } catch (err) {
@@ -41,7 +41,7 @@ router.get('/details/:id', async (req, res) => {
  * 👤 Fundraising Ro‘yxatdan o‘tish
  * POST /api/auth/fundraising/register
  */
-router.post(
+router.post( 
   "/register",
   upload.single("photo"), // ✅ rasm yuklash qo‘shildi
   [

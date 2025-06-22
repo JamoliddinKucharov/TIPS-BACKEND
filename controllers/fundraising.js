@@ -7,7 +7,7 @@ const Fundraising = require("../models/Fundraising");
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-// 🔐 Foydali yordamchi — JWT mavjudligini tekshirish
+// 🔐 JWT mavjudligini tekshirish
 const fundraisingHandler = async (req, res) => {
   if (!JWT_SECRET) {
     console.error("JWT_SECRET_KEY is not defined!");
@@ -18,12 +18,11 @@ const fundraisingHandler = async (req, res) => {
 // ✅ Ro‘yxatdan o‘tish
 const fundraisingRegister = async (req, res) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+  if (!errors.isEmpty())
     return res.status(400).json({ errors: errors.array() });
-  }
 
   const { username, password, email, phone, userId } = req.body;
-  const photo = req.file ? req.file.filename : null;
+  const photo = req.file?.filename || null;
 
   try {
     const existing = await Fundraising.findOne({
@@ -31,14 +30,14 @@ const fundraisingRegister = async (req, res) => {
     });
 
     if (existing) {
-      const message =
-        existing.username === username
-          ? "Username already exists"
-          : "Email already exists";
+      const message = existing.username === username
+        ? "Username already exists"
+        : "Email already exists";
       return res.status(400).json({ message });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newFundraising = new Fundraising({
       username,
       password: hashedPassword,
@@ -58,7 +57,7 @@ const fundraisingRegister = async (req, res) => {
   }
 };
 
-// ✅ Login qilish
+// ✅ Login
 const fundraisingLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -81,17 +80,15 @@ const fundraisingLogin = async (req, res) => {
   }
 };
 
-// ✅ Token orqali profilni olish
+// ✅ Profilni olish
 const fundraisingGet = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
-
   if (!token)
     return res.status(401).json({ message: "No token provided" });
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const fundraising = await Fundraising.findById(decoded.userId);
-
     if (!fundraising)
       return res.status(404).json({ message: "Fundraising not found" });
 
@@ -105,7 +102,7 @@ const fundraisingGet = async (req, res) => {
   }
 };
 
-// ✅ Fundraising yangilash (rasm bilan)
+// ✅ Yangilash (rasm bilan)
 const fundraisingUpdate = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -124,31 +121,28 @@ const fundraisingUpdate = async (req, res) => {
     comment,
   } = req.body;
 
-  const photo = req.file ? req.file.filename : null;
-
   try {
     const fundraising = await Fundraising.findById(fundraisingId);
     if (!fundraising)
       return res.status(404).json({ message: "Fundraising not found" });
 
-    // email tekshiruvi
+    // email takrorlanmasligi
     if (email && email !== fundraising.email) {
       const exists = await Fundraising.findOne({ email });
       if (exists) return res.status(400).json({ message: "Email already exists" });
     }
 
-    // eski rasmni o'chirish
-    if (photo) {
-      if (fundraising.photo) {
-        const oldPath = path.join(__dirname, "../uploads/", fundraising.photo);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
+    // 📸 Rasm yangilanishi
+    if (req.file && req.file.filename) {
+      const newPhoto = req.file.filename;
+      const oldPath = path.join(__dirname, "../uploads/", fundraising.photo || "");
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
       }
-      fundraising.photo = photo;
+      fundraising.photo = newPhoto;
     }
 
-    // boshqa maydonlarni yangilash
+    // 📝 Boshqa maydonlar
     fundraising.username = username || fundraising.username;
     fundraising.email = email || fundraising.email;
     fundraising.phone = phone || fundraising.phone;
@@ -158,6 +152,7 @@ const fundraisingUpdate = async (req, res) => {
     fundraising.price = price || fundraising.price;
     fundraising.comment = comment || fundraising.comment;
 
+    // 🔐 Parol yangilanishi
     if (password) {
       const hashed = await bcrypt.hash(password, 10);
       fundraising.password = hashed;
@@ -167,7 +162,7 @@ const fundraisingUpdate = async (req, res) => {
     res.status(200).json({ message: "Fundraising updated successfully", fundraising });
   } catch (error) {
     console.error("Update error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Something went wrong!" });
   }
 };
 
