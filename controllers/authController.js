@@ -2,14 +2,18 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { Resend } = require("resend");
+const { OAuth2Client } = require("google-auth-library");
+
 const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Company = require("../models/Company");
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const resend = new Resend(process.env.RESEND_API_KEY);
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-// Admin Register
+// ✅ Admin Register
 const registerAdmin = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -35,7 +39,7 @@ const registerAdmin = async (req, res) => {
   }
 };
 
-// Admin Login
+// ✅ Admin Login
 const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -55,7 +59,7 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-// User Register
+// ✅ User Register
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -83,7 +87,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// User Login
+// ✅ User Login
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,7 +107,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Company Register
+// ✅ Company Register
 const registerCompany = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -131,7 +135,7 @@ const registerCompany = async (req, res) => {
   }
 };
 
-// Company Login
+// ✅ Company Login
 const loginCompany = async (req, res) => {
   try {
     const { companyEmail, companyPassword } = req.body;
@@ -151,7 +155,41 @@ const loginCompany = async (req, res) => {
   }
 };
 
-// ✅ UPDATED: Forgot Password (Resend)
+// ✅ Google Token Login (Flutter uchun)
+const googleTokenLogin = async (req, res) => {
+  const { idToken } = req.body;
+  if (!idToken) return res.status(400).json({ message: "idToken is required" });
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+
+    let user = await User.findOne({ googleId: sub });
+
+    if (!user) {
+      user = await User.create({
+        googleId: sub,
+        email,
+        username: name,
+        image: picture,
+        password: "google-auth"
+      });
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET);
+    res.status(200).json({ message: "Login successful", token, user });
+  } catch (error) {
+    console.error("Google token login error:", error);
+    res.status(401).json({ message: "Invalid Google token", error: error.message });
+  }
+};
+
+// ✅ Forgot Password
 const forgotPassword = async (req, res) => {
   const { email, role } = req.body;
   let Model;
@@ -168,7 +206,7 @@ const forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: user._id, role }, JWT_SECRET, { expiresIn: '15m' });
     const resetLink = `https://tips.instalady.uz/reset-password/${token}`;
 
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Reset Your Password',
@@ -181,14 +219,13 @@ const forgotPassword = async (req, res) => {
     }
 
     res.status(200).json({ message: 'Password reset link sent to your email' });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
-// Reset Password
+// ✅ Reset Password
 const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
@@ -217,7 +254,7 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// Dashboard & Logout
+// ✅ Dashboard
 const getDashboard = (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ message: 'Welcome to your dashboard!', user: req.user });
@@ -226,6 +263,7 @@ const getDashboard = (req, res) => {
   }
 };
 
+// ✅ Logout
 const logout = (req, res) => {
   req.logout((err) => {
     if (err) return res.status(500).json({ message: 'Logout error' });
@@ -240,6 +278,7 @@ module.exports = {
   loginUser,
   registerCompany,
   loginCompany,
+  googleTokenLogin,
   getDashboard,
   logout,
   forgotPassword,

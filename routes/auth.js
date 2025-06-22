@@ -11,7 +11,8 @@ const {
   getDashboard,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  googleTokenLogin 
 } = require("../controllers/authController");
 
 const router = express.Router();
@@ -70,6 +71,9 @@ router.get(
     res.redirect('/dashboard');
   }
 );
+
+router.post("/google/token-login", googleTokenLogin);
+
 
 // 🔐 Facebook Login
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
